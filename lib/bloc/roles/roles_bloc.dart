@@ -10,6 +10,9 @@ part 'roles_state.dart';
 class RolesBloc extends Bloc<RolesEvent, RolesState> {
   ApiRoles rolesApi;
 
+  @override
+  RolesState get initialState => RolesInitial();
+
   RolesBloc(this.rolesApi) : super(RolesInitial()) {
     on<RolesEvent>((event, emit) async {
       if (event is GetRoles) {

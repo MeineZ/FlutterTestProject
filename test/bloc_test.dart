@@ -29,6 +29,10 @@ void main() {
     },
   );
 
+  tearDown(() {
+    sut.close();
+  });
+
   test(
     'RoleView\'s are the same',
     () {
@@ -46,17 +50,29 @@ void main() {
       );
 
       blocTest<RolesBloc, RolesState>(
-        'emits loaded state when fetching roles',
+        'emits loaded state when fetched roles',
         build: () => sut,
         act: (RolesBloc bloc) {
           bloc.add(GetRoles(1));
         },
         wait: const Duration(seconds: 5),
-        expect: () => <RolesState>[
-          RolesLoaded(<RoleView>[
-            RoleView("farmer"),
-          ])
-        ],
+        expect: () => [isA<RolesLoaded>()],
+      );
+
+      blocTest<RolesBloc, RolesState>(
+        'emits loaded state with correct output when fetched roles',
+        build: () => sut,
+        act: (RolesBloc bloc) {
+          bloc.add(GetRoles(1));
+        },
+        wait: const Duration(seconds: 5),
+        expect: () {
+          verify(() => rolesApi.fetchRoles(1)).called(1);
+
+          return [
+            RolesLoaded([RoleView("farmer")])
+          ];
+        },
       );
     },
   );
