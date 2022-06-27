@@ -1,10 +1,15 @@
+import 'package:equatable/equatable.dart';
+
 class Role {
   final String title;
 
   Role(this.title);
 }
 
-class RoleView {
+class RoleView extends Equatable {
+  @override
+  List<Object?> get props => [title];
+
   late String title;
 
   RoleView(this.title);

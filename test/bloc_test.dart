@@ -8,39 +8,56 @@ import 'package:kla_prototype/services/http/roles/api_roles.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockRolesBloc extends MockBloc<RolesEvent, RolesState>
-    implements RolesBloc {
-    }
+    implements RolesBloc {}
 
-class MockApiRoles extends Mock implements ApiRoles { }
+class MockApiRoles extends Mock implements ApiRoles {}
 
-void main() { 
-  late RolesBloc rolesBloc;
-  late ApiRoles rolesApi;
+void main() {
+  late RolesBloc sut;
+  late MockApiRoles rolesApi;
 
-  setUp(() {
-    rolesApi = ApiRoles();
-    rolesBloc = RolesBloc(rolesApi);
+  setUp(
+    () {
+      rolesApi = MockApiRoles();
+      sut = RolesBloc(rolesApi);
 
-    when(() => rolesApi.fetchRoles(1)).thenAnswer(
-      (invocation) async => <Role>[
-        Role("farmer"),
-      ],
-    );
-},);
+      when(() => rolesApi.fetchRoles(1)).thenAnswer(
+        (invocation) async => <Role>[
+          Role("farmer"),
+        ],
+      );
+    },
+  );
 
-  group('Mock the role bloc', () {
+  test(
+    'RoleView\'s are the same',
+    () {
+      expect(RoleView("farmer"), RoleView("farmer"));
+    },
+  );
+
+  group(
+    'Mock the role bloc',
+    () {
       blocTest<RolesBloc, RolesState>(
         'emits [] when nothing is loaded',
-        build: () => rolesBloc,
+        build: () => sut,
         expect: () => const <RolesState>[],
       );
 
       blocTest<RolesBloc, RolesState>(
         'emits loaded state when fetching roles',
-        build: () => rolesBloc,
-        act: (RolesBloc bloc) { bloc.add(GetRoles(1)); },
+        build: () => sut,
+        act: (RolesBloc bloc) {
+          bloc.add(GetRoles(1));
+        },
         wait: const Duration(seconds: 5),
-        expect: () => const <RolesState>[],
+        expect: () => <RolesState>[
+          RolesLoaded(<RoleView>[
+            RoleView("farmer"),
+          ])
+        ],
       );
-  },);
+    },
+  );
 }
