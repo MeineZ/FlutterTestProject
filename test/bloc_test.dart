@@ -16,18 +16,16 @@ void main() {
   late RolesBloc sut;
   late MockApiRoles rolesApi;
 
-  setUp(
-    () {
-      rolesApi = MockApiRoles();
-      sut = RolesBloc(rolesApi);
+  setUp(() {
+    rolesApi = MockApiRoles();
+    sut = RolesBloc(rolesApi);
 
-      when(() => rolesApi.fetchRoles(1)).thenAnswer(
-        (invocation) async => <Role>[
-          Role("farmer"),
-        ],
-      );
-    },
-  );
+    when(() => rolesApi.fetchRoles(1)).thenAnswer(
+      (invocation) async => <Role>[
+        Role("farmer"),
+      ],
+    );
+  });
 
   tearDown(() {
     sut.close();
@@ -36,7 +34,7 @@ void main() {
   test(
     'RoleView\'s are the same',
     () {
-      expect(RoleView("farmer"), RoleView("farmer"));
+      expect(RoleView("farmer"), RoleView("FarmeR"));
     },
   );
 

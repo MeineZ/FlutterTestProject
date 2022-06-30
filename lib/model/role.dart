@@ -8,7 +8,7 @@ class Role {
 
 class RoleView extends Equatable {
   @override
-  List<Object?> get props => [title];
+  List<Object?> get props => [title.toLowerCase()];
 
   late String title;
 
